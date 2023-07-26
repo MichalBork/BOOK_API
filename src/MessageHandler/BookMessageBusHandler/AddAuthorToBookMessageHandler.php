@@ -28,6 +28,11 @@ class AddAuthorToBookMessageHandler
 
         $book = $this->bookRepository->find($addAuthorToBookMessage->getBookId());
 
+
+        if (!$book) {
+            throw new \Exception('Book not found');
+        }
+
         if(count($book->getAuthors()) > 3) {
             throw new \InvalidArgumentException(
                 sprintf('Book can have maximum 3 authors, %s given', count($book->getAuthors()))
@@ -35,10 +40,10 @@ class AddAuthorToBookMessageHandler
         }
 
 
-        if ($author && $book) {
+        if ($author) {
             $book->addAuthor($author);
         } else {
-            throw new \Exception('Author or Book not found');
+            throw new \Exception('Author  not found');
         }
 
         $this->bookRepository->update($book);
